@@ -1,84 +1,72 @@
 package com.sbs.untact.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sbs.untact.dto.Article;
+import com.sbs.untact.dto.ResultData;
+import com.sbs.untact.service.ArticleService;
+import com.sbs.untact.util.Util;
 
+//고객응대, 안내데스크
 @Controller
 public class UsrArticleController {
-	private int articleLastId;
-	private List<Article> articles;
+	@Autowired
+	private ArticleService articleService;
 	
-	public UsrArticleController() {
-		articleLastId = 0;
-		articles = new ArrayList<>();
-		
-		articles.add(new Article(++articleLastId, "2020-01-25", "제목1", "내용1"));
-		articles.add(new Article(++articleLastId, "2020-01-25", "제목2", "내용2"));	
-	}
-
 	@RequestMapping("/usr/article/detail")
 	@ResponseBody
 	public Article showDetail(int id) {
-		return articles.get(id - 1);
+		Article article = articleService.getArticle(id);
+		
+		
+		return article;
 	}
-	
+
 	@RequestMapping("/usr/article/list")
 	@ResponseBody
 	public List<Article> showlist() {
-		return articles;
-	}
-	
-	@RequestMapping("/usr/article/doAdd")
-	@ResponseBody
-	public Map<String, Object> doAdd(String regDate, String title, String body) {
-		articles.add(new Article(++articleLastId, regDate, title, body));
-		
-		Map<String, Object> rs = new HashMap<>();
-		rs.put("resultCode", "P-1");
-		rs.put("msg", "성공");
-		rs.put("id", articleLastId);
-		
-		return rs;
-	}
-	
-	@RequestMapping("/usr/article/doDelete")
-	@ResponseBody
-	public Map<String, Object> doDelete(int id) {
-		boolean deleteArticleRs = deleteArticle(id);
-		Map<String, Object> rs = new HashMap<>();
-		
-		if(deleteArticleRs) {
-			rs.put("resultCode", "P-1");
-			rs.put("msg", "성공");
-		}
-		else {
-			rs.put("resultCode", "F-1");
-			rs.put("msg", "해당 게시물이 존재하지 않습니다.");
-		}
-		
-		rs.put("id", articleLastId);
-		
-		return rs;
+		return articleService.getArticles();
 	}
 
-	private boolean deleteArticle(int id) {
-		for(Article article : articles) {
-			if(article.getId() == id) {
-				articles.remove(article);
-				return true;
-			}
+	@RequestMapping("/usr/article/doAdd")
+	@ResponseBody
+	public ResultData doAdd(String title, String body) {
+		if(title != null) {
+			return new ResultData("F-1", "title을 입력해주세요.");
 		}
-		return false;
+		if(body != null) {
+			return new ResultData("F-1", "body을 입력해주세요.");
+		}
+		
+		return articleService.add(title, body);
 	}
-	
-	
-	
+
+	@RequestMapping("/usr/article/doDelete")
+	@ResponseBody
+	public ResultData doDelete(int id) {
+		Article article = articleService.getArticle(id);
+		if(article == null) {
+			return new ResultData("F-1", "해당 게시물이 존재하지 않습니다.");
+		}
+		 return articleService.deleteArticle(id);
+	}
+
+	@RequestMapping("/usr/article/doModify")
+	@ResponseBody
+	public ResultData doModify(int id, String title, String body) {
+		Article article = articleService.getArticle(id);
+		if(article == null) {
+			return new ResultData("F-1", "해당 게시물이 존재하지 않습니다.");
+		}
+		
+		return articleService.modify(id, title, body);
+	}
+
+
+
 }
