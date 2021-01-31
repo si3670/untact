@@ -29,27 +29,45 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/list")
 	@ResponseBody
-	public List<Article> showlist() {
-		return articleService.getArticles();
+	public List<Article> showlist(String searchKeywordType, String searchKeyword) {
+		if(searchKeywordType != null) {
+			searchKeywordType = searchKeywordType.trim(); //null아니면 공백 지우기
+		}
+		if(searchKeywordType == null || searchKeywordType.length() == 0) {
+			searchKeywordType = "titleAndBody";
+		}
+		
+		if(searchKeyword != null && searchKeyword.length() == 0) {
+			searchKeyword = null;
+		}
+		if(searchKeyword != null) {
+			searchKeyword = searchKeyword.trim();
+		}
+		return articleService.getArticles(searchKeywordType, searchKeyword);
 	}
 
 	@RequestMapping("/usr/article/doAdd")
 	@ResponseBody
 	public ResultData doAdd(String title, String body) {
-		if(title != null) {
+		if(title == null) {
 			return new ResultData("F-1", "title을 입력해주세요.");
 		}
-		if(body != null) {
+		if(body == null) {
 			return new ResultData("F-1", "body을 입력해주세요.");
 		}
 		
-		return articleService.add(title, body);
+		return articleService.addArticle(title, body);
 	}
 
 	@RequestMapping("/usr/article/doDelete")
 	@ResponseBody
-	public ResultData doDelete(int id) {
+	public ResultData doDelete(Integer id) {
 		Article article = articleService.getArticle(id);
+		
+		if(id == null) {
+			return new ResultData("F-1", "title을 입력해주세요.");
+		}
+		
 		if(article == null) {
 			return new ResultData("F-1", "해당 게시물이 존재하지 않습니다.");
 		}
@@ -58,8 +76,18 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doModify")
 	@ResponseBody
-	public ResultData doModify(int id, String title, String body) {
+	public ResultData doModify(Integer id, String title, String body) {
 		Article article = articleService.getArticle(id);
+		if(id == null) {
+			return new ResultData("F-1", "id을 입력해주세요.");
+		}
+		if(title == null) {
+			return new ResultData("F-1", "title을 입력해주세요.");
+		}
+		if(body == null) {
+			return new ResultData("F-1", "body을 입력해주세요.");
+		}
+		
 		if(article == null) {
 			return new ResultData("F-1", "해당 게시물이 존재하지 않습니다.");
 		}
