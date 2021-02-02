@@ -1,65 +1,25 @@
 package com.sbs.untact.dao;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.sbs.untact.dto.Article;
-import com.sbs.untact.dto.ResultData;
-import com.sbs.untact.util.Util;
 
-public class ArticleDao {
-	private int articleLastId;
-	private List<Article> articles;
+//1차원적인 일
+@Mapper
+public interface ArticleDao {
 
-	public ArticleDao() {
-		articleLastId = 0;
-		articles = new ArrayList<>();
+	public Article getArticle(@Param(value = "id")int id);
 
-		articles.add(new Article(++articleLastId, "2020-01-25 12:12:12", "2020-01-25 12:12:12", "제목1", "내용1"));
-		articles.add(new Article(++articleLastId, "2020-01-25 12:12:12", "2020-01-25 12:12:12", "제목2", "내용2"));
-	}
+	public List<Article> getArticles(@Param(value = "searchKeywordType")String searchKeywordType, @Param(value = "searchKeyword")String searchKeyword);
 
-	public Article getArticle(int id) {
-		for (Article article : articles) {
-			if (article.getId() == id) {
-				return article;
-			}
-		}
-		return null;
-	}
+//select가 아닌건 void
+	public void addArticle(Map<String, Object> param);
 
-	public List<Article> getArticles(String searchKeywordType, String searchKeyword) {
-		if (searchKeyword == null) {
-			return articles;
-		}
-		List<Article> filtered = new ArrayList<>();
+	public void deleteArticle(@Param(value = "id")int id);
 
-		for (Article article : articles) {
-			boolean contains = false;
-			if (searchKeywordType.equals("title")) {
-				contains = article.getTitle().contains(searchKeyword);
-			} else if (searchKeywordType.equals("body")) {
-				contains = article.getBody().contains(searchKeyword);
-			} else {
-				contains = article.getTitle().contains(searchKeyword);
-				if (contains == false) {
-					contains = article.getBody().contains(searchKeyword);
-				}
-			}
-
-			if (contains) {
-				filtered.add(article);
-			}
-		}
-		return filtered;
-	}
-
-	public int getAddArticle(String title, String body) {
-		int id = ++articleLastId;
-		String regDate = Util.getNowDateStr();
-		String updateDate = regDate;
-
-		articles.add(new Article(id, regDate, updateDate, title, body));
-		return id;
-	}
+	public void modifyArticle(@Param(value = "id")int id, @Param(value = "title")String title, @Param(value = "body")String body);
 }
