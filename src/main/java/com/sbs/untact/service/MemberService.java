@@ -20,8 +20,21 @@ public class MemberService {
 	public ResultData addMember(Map<String, Object> param) {
 		memberDao.addMember(param);
 		int id = Util.getAsInt(param.get("id"), 0);
-		return new ResultData("P-1", "성공", "id", id);
+		return new ResultData("P-1", "가입 성공", "id", id);
 	}
 
+	public Member getMember(int id) {
+		return memberDao.getMember(id);
+	}
+
+	public Member getMemberByLoginId(String loginId) {
+		return memberDao.getMemberByLoginId(loginId);
+	}
+
+	public ResultData modifyMember(Map<String, Object> param) {
+		memberDao.modifyMember(param);
+
+		return new ResultData("P-1", "수정 성공");
+	}
 
 }

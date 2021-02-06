@@ -16,4 +16,48 @@
 		cellphoneNo = #{cellphoneNo},
 		email = #{email}
 	</insert>
+	
+		<!-- public Member getMember(@Param(value = "loginId")String loginId); -->
+	<select id="getMember" resultType="Member">
+		SELECT *
+		FROM `member`
+		WHERE loginId
+		= #{id}
+	</select>
+	
+			<!-- public Member getMember(@Param(value = "loginId")String loginId); -->
+	<select id="getMemberByLoginId" resultType="Member">
+		SELECT *
+		FROM `member`
+		WHERE loginId
+		= #{loginId}
+	</select>
+	
+	<!-- public void modifyMember(Map<String, Object> param); -->
+	<update id="modifyMember">
+		UPDATE `member`
+		<set>
+			<if test="loginPw != null || name != null || nickname != null || cellphoneNo != null || email != null">
+				updateDate = NOW(),
+			</if>
+			<if test="loginPw != null">
+				loginPw = #{loginPw},
+			</if>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="nickname != null">
+				nickname = #{nickname},
+			</if>
+			<if test="cellphoneNo != null">
+				cellphoneNo = #{cellphoneNo},
+			</if>
+			<if test="email != null">
+				email = #{email},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	
 </mapper>
