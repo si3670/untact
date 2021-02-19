@@ -1,7 +1,5 @@
 package com.sbs.untact.service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +33,10 @@ public class MemberService {
 		memberDao.modifyMember(param);
 
 		return new ResultData("P-1", "수정 성공");
+	}
+	//관리자 회원
+	public boolean isAdmin(int actorId) {
+		return actorId == 1;
 	}
 
 }

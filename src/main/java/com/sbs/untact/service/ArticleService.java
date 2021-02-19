@@ -1,6 +1,5 @@
 package com.sbs.untact.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +16,8 @@ import com.sbs.untact.util.Util;
 public class ArticleService {
 	@Autowired //new ArticleDao 연결
 	private ArticleDao articleDao;
+	@Autowired
+	private MemberService memberService;
 
 	public Article getArticle(int id) {
 		return articleDao.getArticle(id);
@@ -43,5 +44,20 @@ public class ArticleService {
 		articleDao.modifyArticle(id, title, body);
 		
 		return new ResultData("P-1", "수정 성공", "id", id);
+	}
+
+	public ResultData getActorCanModifyRd(Article article, int actorId) {
+		if (article.getMemberId() == actorId) {
+			return new ResultData("P-1", "수정, 삭제 성공");
+		}
+		if(memberService.isAdmin(actorId)) {
+			return new ResultData("P-2", "관리자 성공");
+		}
+		
+		return new ResultData("F-1", "권한이 없습니다.");
+	}
+
+	public ResultData getActorCanDeleteRd(Article article, int actorId) {
+		return getActorCanModifyRd(article, actorId);
 	}
 }

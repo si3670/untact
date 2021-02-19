@@ -38,9 +38,10 @@
 		INSERT INTO article
 		SET regDate = NOW(),
 		updateDate = NOW(),
-		title =
-		#{title},
-		`body` = #{body}
+		title = #{title},
+		`body` = #{body},
+		memberId = #{memberId}
+		
 	</insert>
 
 	<!-- public void deleteArticle(@Param(value = "id")int id); -->
@@ -66,7 +67,4 @@
 		</set>
 		WHERE id = #{id}
 	</update>
-
-
-
 </mapper>

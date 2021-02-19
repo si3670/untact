@@ -11,7 +11,7 @@
 		updateDate = NOW(),
 		loginId = #{loginId},
 		loginPw = #{loginPw},
-		`name` = #{name},
+		name = #{name},
 		nickname = #{nickname},
 		cellphoneNo = #{cellphoneNo},
 		email = #{email}
@@ -44,7 +44,7 @@
 				loginPw = #{loginPw},
 			</if>
 			<if test="name != null">
-				`name` = #{name},
+				name = #{name},
 			</if>
 			<if test="nickname != null">
 				nickname = #{nickname},
