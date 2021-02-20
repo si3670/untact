@@ -19,7 +19,7 @@ public class ResultData {
 	}
 	
 	public boolean isSuccess() {
-		return resultCode.startsWith("S-");
+		return resultCode.startsWith("P-");
 	}
 	
 	public boolean isFail() {

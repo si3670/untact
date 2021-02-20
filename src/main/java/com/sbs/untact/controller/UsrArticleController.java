@@ -75,22 +75,22 @@ public class UsrArticleController {
 	public ResultData doDelete(Integer id, HttpSession session) {
 		// 로그인 권한
 		int loginedMemberId = Util.getAsInt(session.getAttribute("loginedMemberId"), 0);
-		if(loginedMemberId == 0) {
+		if (loginedMemberId == 0) {
 			return new ResultData("F-1", "로그인 후 이용해주세요");
 		}
 		if (id == null) {
 			return new ResultData("F-1", "id를 입력해주세요.");
 		}
-		
+
 		Article article = articleService.getArticle(id);
-		
+
 		if (article == null) {
 			return new ResultData("F-1", "해당 게시물이 존재하지 않습니다.");
 		}
-		
+
 		ResultData actorCanDeleteRd = articleService.getActorCanDeleteRd(article, loginedMemberId);
-		if(actorCanDeleteRd.isFail()) {
-			return actorCanDeleteRd; //성공, 실패
+		if (actorCanDeleteRd.isFail()) {
+			return actorCanDeleteRd; // 성공, 실패
 		}
 		return articleService.deleteArticle(id);
 	}
@@ -100,7 +100,7 @@ public class UsrArticleController {
 	public ResultData doModify(Integer id, String title, String body, HttpSession session) {
 		// 로그인 권한
 		int loginedMemberId = Util.getAsInt(session.getAttribute("loginedMemberId"), 0);
-		if(loginedMemberId == 0) {
+		if (loginedMemberId == 0) {
 			return new ResultData("F-1", "로그인 후 이용해주세요");
 		}
 		if (id == null) {
@@ -112,18 +112,18 @@ public class UsrArticleController {
 		if (body == null) {
 			return new ResultData("F-1", "body을 입력해주세요.");
 		}
-		
+
 		Article article = articleService.getArticle(id);
-		
+
 		if (article == null) {
 			return new ResultData("F-1", "해당 게시물이 존재하지 않습니다.");
 		}
-		
+
 		ResultData actorCanModifyRd = articleService.getActorCanModifyRd(article, loginedMemberId);
-		if(actorCanModifyRd.isFail()) {
-			return actorCanModifyRd; //성공, 실패
+		if (actorCanModifyRd.isFail()) {
+			return actorCanModifyRd; // 성공, 실패
 		}
-		
+
 		return articleService.modifyArticle(id, title, body);
 	}
 
